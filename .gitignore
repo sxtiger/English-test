@@ -2,3 +2,5 @@ ssl/
 __pycache__/
 flask_sessions/
 English Phrase_backup_*.*
+.DS_Store
+
