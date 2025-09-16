@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  english-test:
+    image: python:3.9-slim
+    container_name: english-phrase-test
+    restart: unless-stopped
+    working_dir: /app
+    command: >
+      bash -c "
+        pip install --upgrade pip &&
+        pip install --no-cache-dir Flask==2.3.3 Flask-Session==0.5.0 &&
+        pip install --no-cache-dir 'numpy>=1.24.0,<1.25.0' &&
+        pip install --no-cache-dir pytz python-dateutil tzdata &&
+        pip install --no-cache-dir pandas==2.1.1 &&
+        pip install --no-cache-dir openpyxl==3.1.2 Werkzeug==2.3.7 &&
+        pip install --no-cache-dir pyopenssl &&
+        mkdir -p flask_sessions uploads data ssl &&
+        if [ ! -f /app/ssl/cert.pem ]; then
+          openssl req -x509 -newkey rsa:4096 -keyout /app/ssl/privkey.pem -out /app/ssl/cert.pem -days 365 -nodes -subj '/CN=localhost';
+        fi &&
+        python exam_webui_https.py
+      "
+    ports:
+      - "51001:51001"  # HTTPS端口
+      - "51000:51000"  # HTTP端口（重定向用）
+    volumes:
+      - .:/app
+      - ./ssl:/app/ssl
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1

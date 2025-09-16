@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  english-test:
+    image: python:3.9-slim
+    container_name: english-phrase-test
+    restart: unless-stopped
+    working_dir: /app
+    command: >
+      bash -c "
+        pip install --upgrade pip &&
+        pip install --no-cache-dir Flask==2.3.3 Flask-Session==0.5.0 &&
+        pip install --no-cache-dir 'numpy>=1.24.0,<1.25.0' &&
+        pip install --no-cache-dir pytz python-dateutil tzdata &&
+        pip install --no-cache-dir pandas==2.1.1 &&
+        pip install --no-cache-dir openpyxl==3.1.2 Werkzeug==2.3.7 &&
+        mkdir -p flask_sessions uploads data &&
+        python exam_webui.py
+      "
+    ports:
+      - "51001:50001"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1

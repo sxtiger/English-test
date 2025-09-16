@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>测试进行中 - 英语短语测试系统</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .question-section {
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .option-item {
+            margin-bottom: 15px;
+        }
+        
+        .option-label {
+            display: block;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .option-label:hover {
+            background: #e3f2fd;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+        
+        .option-input {
+            display: none;
+        }
+        
+        .option-input:checked + .option-label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .option-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .option-input:checked + .option-label .option-number {
+            background: white;
+            color: #667eea;
+        }
+        
+        .option-text {
+            display: inline-block;
+            vertical-align: top;
+            line-height: 30px;
+        }
+        
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+        }
+        
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .timer {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .question-title {
+            color: #333;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+        
+        .question-counter {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                margin: 0;
+                padding: 20px;
+                border-radius: 10px;
+            }
+            
+            .question {
+                font-size: 1.4em;
+                padding: 20px;
+            }
+            
+            .option-label {
+                padding: 16px;
+                font-size: 16px; /* 防止iOS缩放 */
+            }
+            
+            .submit-btn {
+                padding: 16px 30px;
+                font-size: 16px; /* 防止iOS缩放 */
+            }
+            
+            .question-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .question {
+                font-size: 1.2em;
+                padding: 15px;
+            }
+            
+            .option-label {
+                padding: 14px;
+                margin-bottom: 8px;
+            }
+            
+            .option-number {
+                width: 26px;
+                height: 26px;
+                line-height: 26px;
+                font-size: 0.8em;
+                margin-right: 12px;
+            }
+            
+            .submit-btn {
+                width: 100%;
+                padding: 18px;
+                font-size: 16px;
+            }
+            
+            .progress-text {
+                font-size: 13px;
+            }
+            
+            .question-counter {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+        }
+        
+        /* iPhone 14 Pro Max特定优化 */
+        @media (max-width: 430px) {
+            .question {
+                font-size: 1.1em;
+                padding: 12px;
+                line-height: 1.3;
+            }
+            
+            .option-label {
+                padding: 12px;
+                border-radius: 8px;
+            }
+            
+            .option-text {
+                line-height: 1.4;
+            }
+        }
+        
+        /* 触摸设备优化 */
+        @media (hover: none) and (pointer: coarse) {
+            .option-label {
+                min-height: 44px; /* iOS推荐的最小触摸目标 */
+            }
+            
+            .option-label:hover {
+                transform: none;
+            }
+            
+            .option-label:active {
+                transform: scale(0.98);
+                transition: transform 0.1s;
+            }
+            
+            .submit-btn:hover {
+                transform: none;
+            }
+            
+            .submit-btn:active {
+                transform: scale(0.98);
+                transition: transform 0.1s;
+            }
+        }
+        
+        /* 横屏模式优化 */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .container {
+                padding: 15px;
+            }
+            
+            .question {
+                font-size: 1.1em;
+                padding: 15px;
+            }
+            
+            .options {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .option-item {
+                margin-bottom: 0;
+            }
+            
+            .submit-section {
+                margin-top: 20px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .container {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .option-item {
+            animation: fadeIn 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .option-item:nth-child(1) { animation-delay: 0.1s; }
+        .option-item:nth-child(2) { animation-delay: 0.2s; }
+        .option-item:nth-child(3) { animation-delay: 0.3s; }
+        .option-item:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 进度条 -->
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ (progress / total * 100) | round(1) }}%"></div>
+        </div>
+        <div class="progress-text">
+            第 {{ progress }} 题，共 {{ total }} 题 ({{ (progress / total * 100) | round(1) }}%)
+        </div>
+        
+        <!-- 题目头部 -->
+        <div class="question-header">
+            <h1 class="question-title">请选择正确答案</h1>
+            <div class="question-counter">{{ progress }}/{{ total }}</div>
+        </div>
+        
+        <!-- 题目 -->
+        <div class="question-section">
+            <div class="question">
+                {{ question }}
+            </div>
+        </div>
+        
+        <!-- 答题表单 -->
+        <form method="post" id="answerForm">
+            <ul class="options">
+                {% for option in options %}
+                    <li class="option-item">
+                        <input type="radio" name="answer" value="{{ loop.index }}" id="option{{ loop.index }}" class="option-input" required>
+                        <label for="option{{ loop.index }}" class="option-label">
+                            <span class="option-number">{{ ['A', 'B', 'C', 'D'][loop.index0] }}</span>
+                            <span class="option-text">{{ option }}</span>
+                        </label>
+                    </li>
+                {% endfor %}
+            </ul>
+            
+            <div class="submit-section">
+                <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                    {% if progress < total %}
+                        下一题 →
+                    {% else %}
+                        完成测试 ✓
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        // 启用提交按钮当选择了答案
+        const radioInputs = document.querySelectorAll('input[name="answer"]');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        radioInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                submitBtn.disabled = false;
+            });
+        });
+        
+        // 键盘快捷键支持
+        document.addEventListener('keydown', function(e) {
+            if (e.key >= '1' && e.key <= '4') {
+                const optionIndex = parseInt(e.key);
+                const option = document.getElementById('option' + optionIndex);
+                if (option) {
+                    option.checked = true;
+                    submitBtn.disabled = false;
+                }
+            } else if (e.key === 'Enter' && !submitBtn.disabled) {
+                document.getElementById('answerForm').submit();
+            }
+        });
+        
+        // 防止重复提交
+        document.getElementById('answerForm').addEventListener('submit', function() {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '提交中...';
+        });
+        
+        // 自动聚焦到第一个选项（提升键盘操作体验）
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstOption = document.getElementById('option1');
+            if (firstOption) {
+                firstOption.focus();
+            }
+        });
+    </script>
+</body>
+</html>

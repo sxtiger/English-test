@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英语短语测试系统</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        select, input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .upload-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            text-align: center;
+            background: #fafbfc;
+        }
+        
+        .upload-section h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.2em;
+        }
+        
+        .file-upload {
+            margin-bottom: 15px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .file-label:hover {
+            background: #5a6268;
+        }
+        
+        .upload-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .upload-btn:hover {
+            background: #218838;
+        }
+        
+        .upload-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .start-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+        
+        .flash-message {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .flash-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .flash-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .file-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .selected-file {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 英语短语测试系统</h1>
+        
+        <!-- Flash消息 -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message flash-success">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- 统计信息 -->
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">{{ normal_total }}</div>
+                <div class="stat-label">正常题库</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ error_total }}</div>
+                <div class="stat-label">错题库</div>
+            </div>
+        </div>
+        
+        <!-- 文件上传区域 -->
+        <div class="upload-section">
+            <h3>📁 上传Markdown文件</h3>
+            <form id="uploadForm" action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+                <div class="file-upload">
+                    <input type="file" id="fileInput" name="file" accept=".md" class="file-input" onchange="updateFileName()">
+                    <label for="fileInput" class="file-label">选择.md文件</label>
+                </div>
+                <div class="file-info" id="fileInfo">
+                    支持格式：.md文件（最大16MB）
+                </div>
+                <button type="submit" class="upload-btn" id="uploadBtn" disabled>上传文件</button>
+            </form>
+        </div>
+        
+        <!-- 测试设置 -->
+        <form action="{{ url_for('start_test') }}" method="post">
+            <div class="form-group">
+                <label for="test_mode">测试模式：</label>
+                <select name="test_mode" id="test_mode">
+                    <option value="normal">正常模式</option>
+                    <option value="error">错题模式</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="question_count">题目数量：</label>
+                <input type="number" 
+                       name="question_count" 
+                       id="question_count" 
+                       value="{{ default }}" 
+                       min="1" 
+                       max="{{ max(normal_total, error_total) }}"
+                       required>
+            </div>
+            
+            <button type="submit" class="start-btn">🚀 开始测试</button>
+        </form>
+    </div>
+    
+    <script>
+        function updateFileName() {
+            const fileInput = document.getElementById('fileInput');
+            const fileInfo = document.getElementById('fileInfo');
+            const uploadBtn = document.getElementById('uploadBtn');
+            
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                fileInfo.innerHTML = '<span class="selected-file">已选择: ' + fileName + '</span>';
+                uploadBtn.disabled = false;
+            } else {
+                fileInfo.innerHTML = '支持格式：.md文件（最大16MB）';
+                uploadBtn.disabled = true;
+            }
+        }
+        
+        // 测试模式切换时更新最大题目数
+        document.getElementById('test_mode').addEventListener('change', function() {
+            const questionCount = document.getElementById('question_count');
+            if (this.value === 'normal') {
+                questionCount.max = {{ normal_total }};
+            } else {
+                questionCount.max = {{ error_total }};
+            }
+            
+            if (parseInt(questionCount.value) > parseInt(questionCount.max)) {
+                questionCount.value = questionCount.max;
+            }
+        });
+    </script>
+</body>
+</html>
