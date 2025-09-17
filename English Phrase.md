@@ -1612,3 +1612,7 @@
 - wash (sth) out : 洗掉、洗净(颜色或污迹)
 - hold one's tongue : 保持沉默
 - call attention to : 引起人们注意
+## Day58(3)
+- in due course : 在适当的时候、到一定的时候
+- hold forth : 滔滔不绝地说、发表长篇大论
+- like lightning : 闪电般地、极快地
