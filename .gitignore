@@ -34,3 +34,7 @@ templates/bak_*.html
 
 # Obsidian 粘贴的图片(未被文档引用)
 Pasted image *.png
+
+# 本地工作记录(对话记录、改动说明等,仅本地留存,不发布)
+对话记录_*.md
+改动与部署说明_*.md

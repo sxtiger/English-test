@@ -46,9 +46,9 @@ Python 3.9 · Flask 2.3 · Flask-Session · pandas · openpyxl · Docker
 ├── docker-entrypoint.sh     # 容器启动脚本(建目录、生成证书)
 ├── scripts/nas_update.sh    # NAS 端一键更新脚本(git pull + 重启容器)
 ├── .env.example             # 环境变量模板(复制为 .env 填写内网地址;.env 不发布)
-├── 改动与部署说明_20260823.md # 最近一次重构的详细记录
 │
-│  ── 以下均为运行时生成,已在 .gitignore 中排除 ──
+│  ── 以下为本地/运行时文件,已在 .gitignore 中排除,不发布 ──
+├── 对话记录_*.md、改动与部署说明_*.md # 本地工作记录,仅本地留存
 ├── English Phrase.xlsx      # 由 .md 自动转换的题库
 ├── Error_Phrases.xlsx       # 运行时积累的错题库
 ├── English Phrase_backup_*.md # 上传新短语库时的自动备份
@@ -199,5 +199,5 @@ vi .env                        # 填写 SERVER_IP=<NAS_IP>
 
 ## 更新日志
 
-- **2026-08-23** 修复容器启动后局域网无法访问的问题;重写 Dockerfile(依赖预装、秒级启动);HTTP/HTTPS 双协议同进程服务;新增健康检查与自签名证书自动生成(详见《改动与部署说明_20260823.md》);初始化 git 仓库与 `.gitignore`,建立 GitHub → NAS 的 git 部署流程;发布内容脱敏:`SERVER_IP` 改由本地 `.env` 配置,文档不再包含具体内网地址
+- **2026-08-23** 修复容器启动后局域网无法访问的问题;重写 Dockerfile(依赖预装、秒级启动);HTTP/HTTPS 双协议同进程服务;新增健康检查与自签名证书自动生成(详见本地文档《改动与部署说明_20260823.md》,不随仓库发布);初始化 git 仓库与 `.gitignore`,建立 GitHub → NAS 的 git 部署流程;发布内容脱敏:`SERVER_IP` 改由本地 `.env` 配置,文档不再包含具体内网地址
 - **2025-09-16** 优化代码与 HTML 模板;支持 http/https;引入 docker compose
