@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  english-test:
+    # 依赖在构建镜像时预装，容器启动不再联网安装，秒级启动且离线可用
+    build:
+      context: .
+      dockerfile: dockerfile
+    image: english-phrase-test:latest
+    container_name: english-phrase-test
+    restart: unless-stopped
+    working_dir: /app
+    command: python exam_webui_https.py
+    ports:
+      - "51000:51000"  # HTTP  访问端口
+      - "51001:51001"  # HTTPS 访问端口
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      # NAS 的局域网 IP:请在项目目录创建 .env 文件并填写实际值
+      # (参见 .env.example;.env 已被 .gitignore 排除,不会发布)
+      - SERVER_IP=${SERVER_IP:-127.0.0.1}
+      - HTTP_PORT=51000
+      - HTTPS_PORT=51001

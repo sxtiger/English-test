@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>测试结果 - 英语短语测试系统</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        .score-summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .score-item {
+            text-align: center;
+        }
+        
+        .score-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .score-correct {
+            color: #28a745;
+        }
+        
+        .score-wrong {
+            color: #dc3545;
+        }
+        
+        .score-rate {
+            color: #667eea;
+        }
+        
+        .score-label {
+            font-size: 1em;
+            color: #666;
+        }
+        
+        .wrong-section {
+            margin-top: 40px;
+        }
+        
+        .wrong-section h2 {
+            color: #dc3545;
+            border-bottom: 2px solid #dc3545;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .wrong-item {
+            background: #fff5f5;
+            border-left: 4px solid #dc3545;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .wrong-question {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .answer-row {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+        
+        .answer-label {
+            min-width: 80px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .wrong-answer {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .options-list {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        
+        .options-list li {
+            margin: 5px 0;
+            color: #666;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .no-errors {
+            text-align: center;
+            color: #28a745;
+            font-size: 1.2em;
+            font-weight: 600;
+            padding: 30px;
+            background: #d4edda;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .congratulations {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .emoji {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .congrats-text {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                max-width: none;
+                margin: 0;
+                padding: 20px;
+                border-radius: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 20px;
+            }
+            
+            .score-summary {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+                margin-bottom: 30px;
+            }
+            
+            .score-number {
+                font-size: 2em;
+            }
+            
+            .emoji {
+                font-size: 2.5em;
+            }
+            
+            .congrats-text {
+                font-size: 1.1em;
+            }
+            
+            .wrong-item {
+                padding: 15px;
+                margin-bottom: 12px;
+            }
+            
+            .wrong-question {
+                font-size: 1.1em;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 16px; /* 防止iOS缩放 */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.3em;
+                margin-bottom: 15px;
+            }
+            
+            .score-summary {
+                padding: 15px;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            
+            .score-number {
+                font-size: 1.8em;
+            }
+            
+            .score-label {
+                font-size: 0.9em;
+            }
+            
+            .emoji {
+                font-size: 2em;
+                margin-bottom: 10px;
+            }
+            
+            .congrats-text {
+                font-size: 1em;
+            }
+            
+            .wrong-section h2 {
+                font-size: 1.2em;
+                margin-bottom: 15px;
+            }
+            
+            .wrong-item {
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+            
+            .wrong-question {
+                font-size: 1em;
+                margin-bottom: 8px;
+            }
+            
+            .answer-row {
+                margin: 6px 0;
+            }
+            
+            .answer-label {
+                min-width: 70px;
+                font-size: 0.9em;
+            }
+            
+            .options-list {
+                padding-left: 15px;
+            }
+            
+            .options-list li {
+                font-size: 0.9em;
+            }
+        }
+        
+        /* iPhone 14 Pro Max特定优化 */
+        @media (max-width: 430px) {
+            .container {
+                padding: 12px;
+            }
+            
+            .score-summary {
+                padding: 12px;
+            }
+            
+            .wrong-item {
+                padding: 10px;
+                border-left-width: 3px;
+            }
+            
+            .answer-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2px;
+            }
+            
+            .answer-label {
+                min-width: auto;
+                font-weight: 700;
+                color: #555;
+            }
+        }
+        
+        /* 触摸设备优化 */
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                min-height: 44px; /* iOS推荐的最小触摸目标 */
+            }
+            
+            .btn:hover {
+                transform: none;
+                box-shadow: none;
+            }
+            
+            .btn:active {
+                transform: scale(0.98);
+                transition: transform 0.1s;
+            }
+        }
+        
+        /* 手机按钮专门优化 */
+        @media (max-width: 768px) {
+            .actions {
+                flex-direction: column !important;
+                gap: 12px;
+                margin-top: 30px;
+            }
+            
+            .btn {
+                width: 100% !important;
+                max-width: none !important;
+                min-width: auto !important;
+                flex: none !important;
+                box-sizing: border-box;
+                margin: 0;
+            }
+        }
+        
+        /* 横屏模式优化 - 更保守的布局 */
+        @media (max-width: 768px) and (orientation: landscape) and (min-width: 600px) {
+            .score-summary {
+                flex-direction: row;
+                justify-content: space-around;
+            }
+            
+            .wrong-section {
+                margin-top: 20px;
+            }
+            
+            .actions {
+                flex-direction: row !important;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+            
+            .btn {
+                width: auto !important;
+                min-width: 100px !important;
+                max-width: 150px !important;
+                flex: 1 1 auto !important;
+            }
+        }
+        
+        /* 小屏横屏仍使用竖向布局 */
+        @media (max-width: 599px) and (orientation: landscape) {
+            .actions {
+                flex-direction: column !important;
+            }
+            
+            .btn {
+                width: 100% !important;
+                max-width: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 测试完成！</h1>
+        
+        {% set accuracy = (correct / total * 100) | round(1) if total > 0 else 0 %}
+        
+        <!-- 分数概览 -->
+        <div class="score-summary">
+            <div class="score-item">
+                <div class="score-number score-correct">{{ correct }}</div>
+                <div class="score-label">答对题数</div>
+            </div>
+            <div class="score-item">
+                <div class="score-number score-wrong">{{ wrong }}</div>
+                <div class="score-label">答错题数</div>
+            </div>
+            <div class="score-item">
+                <div class="score-number score-rate">{{ accuracy }}%</div>
+                <div class="score-label">正确率</div>
+            </div>
+        </div>
+        
+        <!-- 祝贺信息 -->
+        {% if accuracy >= 90 %}
+            <div class="congratulations">
+                <div class="emoji">🏆</div>
+                <div class="congrats-text">太棒了！成绩优秀！</div>
+            </div>
+        {% elif accuracy >= 80 %}
+            <div class="congratulations">
+                <div class="emoji">👏</div>
+                <div class="congrats-text">表现很好！继续加油！</div>
+            </div>
+        {% elif accuracy >= 60 %}
+            <div class="congratulations">
+                <div class="emoji">💪</div>
+                <div class="congrats-text">不错的成绩！还有提升空间！</div>
+            </div>
+        {% else %}
+            <div class="congratulations">
+                <div class="emoji">📚</div>
+                <div class="congrats-text">继续努力！多多练习会更好！</div>
+            </div>
+        {% endif %}
+        
+        <!-- 错题详情 -->
+        {% if wrong_list and wrong_list|length > 0 %}
+            <div class="wrong-section">
+                <h2>📋 错题回顾（共{{ wrong_list|length }}题）</h2>
+                {% for item in wrong_list %}
+                    <div class="wrong-item">
+                        <div class="wrong-question">{{ item.question }}</div>
+                        <div class="answer-row">
+                            <span class="answer-label">正确答案:</span>
+                            <span class="correct-answer">{{ item.correct }}</span>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-label">你的答案:</span>
+                            <span class="wrong-answer">{{ item.selected }}</span>
+                        </div>
+                        {% if item.options %}
+                            <div class="answer-row">
+                                <span class="answer-label">所有选项:</span>
+                            </div>
+                            <ul class="options-list">
+                                {% for option in item.options %}
+                                    <li>{{ option }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-errors">
+                <div class="emoji" style="margin-bottom: 10px;">🎯</div>
+                恭喜！全部答对，没有错题！
+            </div>
+        {% endif %}
+        
+        <!-- 操作按钮 -->
+        <div class="actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">🏠 返回首页</a>
+            {% if wrong_list and wrong_list|length > 0 %}
+                <form action="{{ url_for('start_test') }}" method="post" style="display: inline;">
+                    <input type="hidden" name="test_mode" value="error">
+                    <input type="hidden" name="question_count" value="{{ wrong_list|length }}">
+                    <button type="submit" class="btn btn-success">🔄 重测错题</button>
+                </form>
+            {% endif %}
+            <a href="{{ url_for('reset_test') }}" class="btn btn-secondary">🆕 开始新测试</a>
+        </div>
+    </div>
+</body>
+</html>

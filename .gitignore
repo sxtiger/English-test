@@ -1,0 +1,36 @@
+# ===== 系统与编辑器 =====
+.DS_Store
+.obsidian/
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# ===== 运行时数据(容器运行期间自动生成,不发布) =====
+# Flask 会话文件
+flask_sessions/
+# 网页上传的临时文件
+uploads/
+# 预留数据目录
+data/
+# 自签名证书与私钥(严禁发布;每台机器首次启动时自动生成)
+ssl/
+*.log
+# 本地环境变量(含内网地址等私有信息,参见 .env.example)
+.env
+
+# 由 English Phrase.md 运行时自动转换生成的 Excel 题库
+English Phrase.xlsx
+# 运行时自动积累的错题库
+Error_Phrases.xlsx
+
+# 网页上传新短语库时自动生成的备份文件
+English Phrase_backup_*.md
+
+# 旧模板备份
+templates/bak_*.html
+
+# Obsidian 粘贴的图片(未被文档引用)
+Pasted image *.png
